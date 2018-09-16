@@ -81,8 +81,8 @@ static void CreateTopWin(void)
 
 static void CreateAppWin(void)
 {
-    AppWin= WM_CreateWindowAsChild(0,16,320,240-16,WM_HBKWIN,WM_CF_SHOW,(void *)AppShow_CallBack , 10);
-    MIDWIN=ICONVIEW_CreateEx(70,30,180,160,AppWin,WM_CF_SHOW | WM_CF_HASTRANS,ICONVIEW_CF_AUTOSCROLLBAR_V,APP_Menu_ID,60,80); //ICONVIEW_CF_AUTOSCROLLBAR_V
+//    AppWin= WM_CreateWindowAsChild(0,16,320,240-16,WM_HBKWIN,WM_CF_SHOW,(void *)AppShow_CallBack , 10);
+    MIDWIN=ICONVIEW_CreateEx(70,30,180,160,WM_HBKWIN,WM_CF_SHOW | WM_CF_HASTRANS,ICONVIEW_CF_AUTOSCROLLBAR_V,APP_Menu_ID,60,80); //ICONVIEW_CF_AUTOSCROLLBAR_V
 
     ICONVIEW_SetBkColor(MIDWIN,ICONVIEW_CI_SEL,GUI_DARKGRAY);     //被选中的小工具浅灰色
     ICONVIEW_SetFrame(MIDWIN, GUI_COORD_X, 0);//设置图标到IconView边框的间距

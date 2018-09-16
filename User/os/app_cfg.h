@@ -59,7 +59,6 @@
 */
 
 #define  APP_TASK_START_STK_SIZE                128u
-#define  APP_TASK_UPDATE_STK_SIZE               128u        
 #define  APP_TASK_USERAPP_STK_SIZE              512*3u                        
 
 /*

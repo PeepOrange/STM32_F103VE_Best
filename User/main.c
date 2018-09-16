@@ -6,7 +6,6 @@
 *********************************************************************************************************
 */
 static  OS_TCB	 AppTaskStartTCB;		     //定义任务控制块
-static  OS_TCB   AppTaskUpdateTCB;
 static  OS_TCB   AppTaskUserappTCB;
 /*
 *********************************************************************************************************
@@ -14,7 +13,6 @@ static  OS_TCB   AppTaskUserappTCB;
 *********************************************************************************************************
 */
 static	CPU_STK	 AppTaskStartStk[APP_TASK_START_STK_SIZE];	   //定义任务堆栈
-static  CPU_STK  AppTaskUpdateStk[APP_TASK_UPDATE_STK_SIZE];
 __align(8) static  CPU_STK  AppTaskUserappStk[APP_TASK_USERAPP_STK_SIZE];
 
 /*
@@ -24,7 +22,6 @@ __align(8) static  CPU_STK  AppTaskUserappStk[APP_TASK_USERAPP_STK_SIZE];
 */
 static  void   AppTaskStart(void *p_arg);
 static  void   AppTaskCreate(void);
-static  void   AppTaskUpdate(void *p_arg);
 static  void   AppTaskUserapp(void *p_arg);
 /*********************************************************************
 *
@@ -117,43 +114,7 @@ static void  AppTaskStart(void *p_arg)
 }
 
 
-/*
-*********************************************************************************************************
-*	函 数 名: AppTaskUpdate
-*	功能说明: 电容按键
-*	形    参：p_arg 是在创建该任务时传递的形参
-*	返 回 值: 无
-	优 先 级：3
-*********************************************************************************************************
-*/
-static void AppTaskUpdate(void *p_arg)
-{
-	OS_ERR      err;
-	static uint8_t tpad_count=0;
-	(void)p_arg;
-	
-	while(TPAD_Init())
-	{
-		tpad_count++;
-		if(tpad_count>=10)break;
-		bsp_DelayUS(1000);
-	}	
-	
-	while(1)
-	{	
-		if((tpad_count<10)&&TPAD_Scan(0))
-		{
-			//if(UserApp_Flag == 1)tpad_flag=1;
-			macBEEP_ON();
-     
-		}
-		OSTimeDlyHMSM(0, 0, 0, 100,
-                      OS_OPT_TIME_HMSM_STRICT,
-                      &err);
-		macBEEP_OFF();		
 
-	}   
-}
 
 /**************  硬件错误（读FLASH错误）   ***************/
 void hardwareerr(void)
@@ -173,10 +134,7 @@ void hardwareerr(void)
 			OSTimeDlyHMSM(0,0,0,100,OS_OPT_TIME_HMSM_STRICT,&err);
 		}
 	}
-	else if(IsCal==0xFF)
-	{
-	//	Touch_MainTask();
-	}
+
 }
 /*
 *********************************************************************************************************
@@ -212,20 +170,7 @@ static  void  AppTaskCreate(void)
 {
 	OS_ERR      err;
 	
-	/***********************************/
-	OSTaskCreate((OS_TCB       *)&AppTaskUpdateTCB,             
-                 (CPU_CHAR     *)"电容按键",
-                 (OS_TASK_PTR   )AppTaskUpdate, 
-                 (void         *)0,
-                 (OS_PRIO       )APP_TASK_UPDATE_PRIO,
-                 (CPU_STK      *)&AppTaskUpdateStk[0],
-                 (CPU_STK_SIZE  )APP_TASK_UPDATE_STK_SIZE / 10,
-                 (CPU_STK_SIZE  )APP_TASK_UPDATE_STK_SIZE,
-                 (OS_MSG_QTY    )1,
-                 (OS_TICK       )0,
-                 (void         *)0,
-                 (OS_OPT        )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
-                 (OS_ERR       *)&err);
+
 	
 	/***********************************/
 	OSTaskCreate((OS_TCB       *)&AppTaskUserappTCB,             
